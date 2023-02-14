@@ -1,0 +1,28 @@
+package:  media_directories
+version:  '1.0'
+author:   Wolfgang Busch
+supportpage: redaxo.org/support/community/
+
+page:
+    title: 'translate:media_directories'
+    perm:  media_directories[]
+    icon:  rex-icon fa-file-image-o
+    subpages:
+        introduction:   { title: 'translate:introduction' }
+        description:    { title: 'translate:description'  }
+        details:        { title: 'translate:details' }
+        media_folders:  { title: 'translate:media_folders' }
+        file_selection: { title: 'translate:file_selection' }
+        editor_plugins: { title: 'translate:editor_plugins' }
+        
+pages:
+    system_file_search:
+        title:  'translate:system_file_search'
+        block:  system
+        main:   true
+        hidden: true
+
+requires:
+    redaxo: ^5.3.0
+    packages:
+        media_manager: '^2.0.1'
