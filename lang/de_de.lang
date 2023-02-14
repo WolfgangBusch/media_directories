@@ -1,0 +1,11 @@
+# addon:media_directories
+#   package
+media_directories                    = Medienordner
+media_directories_introduction       = Einführung
+media_directories_description        = Beschreibung
+media_directories_details            = Details
+media_directories_media_folders      = Medienordner
+media_directories_file_selection     = Dateiauswahl
+media_directories_editor_plugins     = Editor-Plugins
+#   system
+media_directories_system_file_search = Mediendateien
