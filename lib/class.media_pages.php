@@ -3,7 +3,7 @@
  * Media Directories AddOn
  * @author wolfgang[at]busch-dettum[dot]de Wolfgang Busch
  * @package redaxo5
- * @version Februar 2023
+ * @version März 2023
  */
 #
 class media_pages {

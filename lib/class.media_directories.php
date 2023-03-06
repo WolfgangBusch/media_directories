@@ -3,7 +3,7 @@
  * Media Directories AddOn
  * @author wolfgang[at]busch-dettum[dot]de Wolfgang Busch
  * @package redaxo5
- * @version Februar 2023
+ * @version März 2023
  */
 #
 class media_directories {
@@ -568,7 +568,8 @@ public static function plugin_paths($editor) {
      endif;
    $icon   =rex_path::addonAssets($addon,$addon.'.svg');
    $iconurl=rex_url::addonAssets($addon,$addon.'.svg');
-   if(substr($iconurl,0,1)=='.') $iconurl=substr($iconurl,1);
+   $pos=strpos($iconurl,'/');
+   if($pos>0) $iconurl=substr($iconurl,$pos);
    $files=array(1=>$file1, 2=>$file2, 3=>$file3);
    #
    return array('path'=>$path, 'icon'=>$icon, 'icon_url'=>$iconurl, 'files'=>$files);

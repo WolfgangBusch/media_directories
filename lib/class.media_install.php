@@ -3,7 +3,7 @@
  * Media Directories AddOn
  * @author wolfgang[at]busch-dettum[dot]de Wolfgang Busch
  * @package redaxo5
- * @version Februar 2023
+ * @version März 2023
  */
 #
 class media_install {
@@ -34,7 +34,8 @@ public static function system_page_url() {
    $keys=array_keys($pages);
    $page=$keys[0];
    $url=rex_url::backendController(['page'=>$page]);
-   if(substr($url,0,1)=='.') $url=substr($url,1);
+   $pos=strpos($url,'/');
+   if($pos>0) $url=substr($url,$pos);
    return $url;
    }
 #
