@@ -394,7 +394,7 @@ public static function file_selection($slice_id,$rexval,$medurl,$widtar,$text) {
    #   eines Bildes bzw. eines Links auf eine Mediendatei. Der Code wird als
    #   Javascript-Code in entsprechende Fenster eines HTML-Editors eingebettet
    #   (document.writeln(' ... Code ...')). Er dient auch als Quellcode fuer
-   #   der Seite 'page_system_file_search()'.
+   #   der Seite 'system_file_search()'.
    #   Zu konfigurieren sind Bildbreite bzw. Zielseite des Links und Untertext
    #   und Titel bei Bildern bzw. der Linktext. Wenn Slice-Id und REX-Variable
    #   vorgegeben sind, werden diese beiden Daten sowie der Mediendatei-URL

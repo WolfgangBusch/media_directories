@@ -25,17 +25,20 @@ const this_addon=media_directories::this_addon;   // self::this_addon
 #
 # --------------------------------------------------- Basisfunktionen
 public static function system_page_url() {
-   #   Rueckgabe des URLs der Backend-Seite 'system_file_search.php' im Hauptmenue
-   #   (verborgen). Sie enthaelt die Select-Auswahl eines Medienordners sowie die
+   #   Rueckgabe des URLs der (verborgenen) Backend-Seite 'system_file_search.php'
+   #   im Hauptmenue: /redaxo/index.php?page=system_file_search
+   #   (vergl. package.yml: pages: system_file_search).
+   #   Sie enthaelt die Select-Auswahl eines Medienordners sowie die
    #   Ausgabe der Liste der im gewaehlten Ordner befindlichen Dateien.
    #
    $addon=rex_addon::get(self::this_addon)->getAddon();
-   $pages=$addon->getProperty('pages');
+   $pages=$addon->getProperty('pages');   // vergl. package.yml)
    $keys=array_keys($pages);
-   $page=$keys[0];
-   $url=rex_url::backendController(['page'=>$page]);
-   $pos=strpos($url,'/');
-   if($pos>0) $url=substr($url,$pos);
+   $page=$keys[0];                        // = 'system_page_search'
+   $path=rex_path::backendController();
+   $redaxo=basename(dirname($path));
+   $index =basename($path);
+   $url=DIRECTORY_SEPARATOR.$redaxo.DIRECTORY_SEPARATOR.$index.'?page='.$page;
    return $url;
    }
 #
