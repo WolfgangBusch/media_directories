@@ -336,12 +336,14 @@ public static function is_image_url($medurl) {
    }
 public static function html_image($url,$width,$text) {
    #   Rueckgabe eines HTML-Codes fuer die Darstellung einer Mediendatei als Bild.
-   #   $url              URL der Mediendatei (in urldecodierter Form)
+   #   $url                URL der Mediendatei (in urldecodierter Form)
    #   $width              Breite der Darstellung
-   #   $text               img-title und figcaption-Wert
+   #   $text               img-title
    #
-   return '<img src="'.$url.'" width="'.$width.'" style="max-width:'.$width.'px;" title="'.$text.'"><br>'.$text;
-  }
+   $stwidth='';
+   if($width>0) $stwidth=' width="'.$width.'" style="max-width:'.$width.'px;"';
+   return '<img src="'.$url.'"'.$stwidth.' title="'.$text.'"><br>'.$text;
+ }
 public static function html_link($url,$target,$text) {
    #   Rueckgabe eines HTML-Codes fuer die Darstellung einer Mediendatei als Link
    #   auf die Mediendatei.
@@ -873,7 +875,7 @@ public static function menue_datei($rexval,$mediapath,$selfile,$filter) {
         $cold1=self::prop_pix;
         $line2=self::prop_subtit.':';
         #     Anzeige-Code im Menue
-        $ret=htmlentities(self::html_image($decurl,$wta,$txt));
+        $ret=htmlentities(self::html_image($decurl,'',$txt));
         else:
       #
       # --- Link
