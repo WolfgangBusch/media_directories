@@ -3,7 +3,7 @@
  * Media Directories AddOn
  * @author wolfgang[at]busch-dettum[dot]de Wolfgang Busch
  * @package redaxo5
- * @version März 2023
+ * @version April 2023
  */
 #
 class media_directories {
@@ -49,7 +49,7 @@ const inp_lnktxt=50;                  // Input-Feld-Breite ... (Untertitel/Linkt
 const cat_marker='ZZmedia:';          // Namensanfang einer erstellten Top-Medienkategorie
 #     Parameternamen fuer das Datei-Konfigurationsmenue
 const rexval_id ='value_id';          // Name des URL-Parameters fuer die REX-Variable
-const slice_id  ='sclice_id';         // Name des URL-Parameters fuer die Slice-Id
+const slice_id  ='slice_id';          // Name des URL-Parameters fuer die Slice-Id
 const medurl_id ='media_url';         // Id des <input>-Feldes zur Aufnahme des Medien-URLs
 const widtar_id ='widtar_media_url';  // Id des <input>-Feldes zur Aufnahme von Bildbreite/Zielseite
 const lnktxt_id ='lnktxt_media_url';  // Id des <input>-Feldes zur Aufnahme von Untertitel/Linktext
@@ -648,6 +648,10 @@ public static function cache_image_path($file,$type_id) {
    #   einer gegebenen Bilddatei (unabhaengig davon, ob die Bilddatei existiert).
    #   $file               vollstaendiger Pfad der Bilddatei
    #   $type_id            Medientyp-Id des Bildes
+   #   benutzte functions:
+   #      media_install::cache_ordner()
+   #
+   media_install::cache_ordner();   // ggf. vorher noch Cache-Ordner erstellen
    #
    $thumb=$type_id.'.'.basename($file);
    $cachepath=rex_path::addonCache(self::this_addon);
