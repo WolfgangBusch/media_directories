@@ -216,31 +216,45 @@ public static function file_from_url($medurl) {
    #   vorgegebenem Medien-URL.
    #   $medurl             Medien-URL gemaess rex_media_manager::getUrl($mediatype,$file)
    #                       wird intern vor Benutzung url-decodiert, d.h. in der Form
-   #                       '/index.php?rex_media_type=TYPE&amp;rex_media_file=FILE' bzw.
-   #                       '/index.php?rex_media_file=FILE&amp;rex_media_type=TYPE'
+   #                          '/index.php?rex_media_type=TYPE&amp;rex_media_file=FILE' bzw.
+   #                          '/index.php?rex_media_file=FILE&amp;rex_media_type=TYPE'
+   #                       bzw. Medien-URL gemaess YRewrite:
+   #                          '/media/TYPE/FILE'
    #
    if(empty($medurl)) return '';
    #
+   # --- Mediendatei bestimmen
    $url=urldecode($medurl);
-   $str='rex_media_file=';
-   $len=strlen($str);
-   $pos=strpos($url,$str);
-   if($pos>0):   // ...?rex_media_type=TYPE&amp;rex_media_file=FILE
-     $file=substr($url,$pos+$len);
-     $pos=strpos($file,'&');
-     if($pos<=0):
-       return $file;
-       else:
-       return substr($file,0,$pos);
-       endif;
-     else:       // ...?rex_media_file=FILE&amp;rex_media_type=TYPE
-     $str='?rex_media_file=';
+   if(strpos($medurl,'dex.php?')>0):
+     #     aus /index.php?... ausfiltern
+     $str='rex_media_file=';
      $len=strlen($str);
      $pos=strpos($url,$str);
-     if($pos<=0) return '';
-     $file=substr($url,$pos+$len);
-     $pos=strpos($file,'&');
-     return substr($file,0,$pos);
+     if($pos>0):   // ...?rex_media_type=TYPE&amp;rex_media_file=FILE
+       $file=substr($url,$pos+$len);
+       $pos=strpos($file,'&');
+       if($pos<=0):
+         return $file;
+         else:
+         return substr($file,0,$pos);
+         endif;
+       else:       // ...?rex_media_file=FILE&amp;rex_media_type=TYPE
+       $str='?rex_media_file=';
+       $len=strlen($str);
+       $pos=strpos($url,$str);
+       if($pos<=0) return '';
+       $file=substr($url,$pos+$len);
+       $pos=strpos($file,'&');
+       return substr($file,0,$pos);
+       endif;
+     else:
+     #     gemaess YRewrite aus /media/TYPE/FILE ausfiltern
+     $arr=explode(DIRECTORY_SEPARATOR,$medurl);
+     if(substr($medurl,0,1)==DIRECTORY_SEPARATOR):
+       return $arr[3];
+       else:
+       return $arr[2];
+       endif;
      endif;
    }
 public static function get_mediapath($mediatype) {
@@ -278,27 +292,41 @@ public static function mediapath_from_url($medurl) {
    #   ungueltigem URL).
    #   $medurl             Medien-URL gemaess rex_media_manager::getUrl($mediatype,$file)
    #                       wird intern vor Benutzung url-decodiert, d.h. in der Form
-   #                       '/index.php?rex_media_type=TYPE&rex_media_file=FILE' bzw.
-   #                       '/index.php?rex_media_file=FILE&rex_media_type=TYPE'
+   #                          '/index.php?rex_media_type=TYPE&rex_media_file=FILE' bzw.
+   #                          '/index.php?rex_media_file=FILE&rex_media_type=TYPE'
+   #                       bzw. Medien-URL gemaess YRewrite:
+   #                          '/media/TYPE/FILE'
    #   benutzte functions:
    #      self::get_mediapath($mediatype)
    #
    if(empty($medurl)) return '+++++ kein URL angegeben';
    #
-   # --- Medientyp ausfiltern
+   # --- Medientyp bestimmen
    $url=urldecode($medurl);
-   $str='?rex_media_type=';
-   $len=strlen($str);
-   $pos=strpos($url,$str);
-   if($pos<=0):    // ...?rex_media_file=FILE&rex_media_type=TYPE
-     $str='rex_media_type=';
+   $mediatype='';
+   if(strpos($url,'dex.php?')>0):
+     #     aus /index.php?... ausfiltern
+     $str='?rex_media_type=';
+     $len=strlen($str);
      $pos=strpos($url,$str);
-     $mediatype=substr($url,$pos+$len);
-     else:        // ...?rex_media_type=TYPE&rex_media_file=FILE
-     $mediatype=substr($url,$pos+$len);
-     $pos=strpos($mediatype,'&');
-     if($pos>0) $mediatype=substr($mediatype,0,$pos);
-     if(substr($mediatype,0,1)=='&') $mediatype='';
+     if($pos<=0):    // ...?rex_media_file=FILE&rex_media_type=TYPE
+       $str='rex_media_type=';
+       $pos=strpos($url,$str);
+       $mediatype=substr($url,$pos+$len-1);
+       else:        // ...?rex_media_type=TYPE&rex_media_file=FILE
+       $mediatype=substr($url,$pos+$len);
+       $pos=strpos($mediatype,'&');
+       if($pos>0) $mediatype=substr($mediatype,0,$pos);
+       if(substr($mediatype,0,1)=='&') $mediatype='';
+       endif;
+     else:
+     #     gemaess YRewrite aus /media/TYPE/FILE ausfiltern
+     $arr=explode(DIRECTORY_SEPARATOR,$url);
+     if(substr($url,0,1)==DIRECTORY_SEPARATOR):
+       $mediatype=$arr[2];
+       else:
+       $mediatype=$arr[1];
+       endif;
      endif;
    if(empty($mediatype)) return '+++++ kein Medientyp angegeben';
    #
@@ -700,6 +728,7 @@ public static function cache_image($file,$type_id,$renew=FALSE) {
    #
    # --- Verkleinerung (Thumbnail) herstellen
    $thumbheight=intval($height*$thumbwidth/$width);
+   if($thumbheight<=1) $thumbheight=1;
    $dst=imagecreatetruecolor($thumbwidth,$thumbheight);
    #     Manipulationen zur Transparenz
    $transparent=imagecolorallocatealpha($dst,0,0,0,127);
@@ -777,6 +806,7 @@ public static function menue_datei($rexval,$mediapath,$selfile,$filter) {
    #   benutzte functions:
    #      self::get_mediatype($mediapath)
    #      self::cache_images_for_deletion($mediapath,$type_id)
+   #      self::cache_image($file,$type_id,$renew)
    #      self::is_image($file)
    #      self::html_image($url,$width,$text)
    #      self::html_link($url,$target,$text)
