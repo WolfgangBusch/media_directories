@@ -1,4 +1,11 @@
 # media_directories
+<h4>Version 1.3</h4>
+<ul>
+    <li>Das AddOn berücksichtigt jetzt auch Medien-URLs der Form
+        '/media/mediatype/mediafile' gemäß YRewrite</li>
+    <li>Die Erzeugung der Thumbnails im AddOn-Cache läuft nicht mehr
+        auf einen Fehler wegen Bildhöhe 0.</li>
+</ul>
 <h4>Version 1.2</h4>
 <ul>
     <li>Mit dem Aufruf des Auswahlmenüs wird jetzt der AddOn-Cache-Ordner
